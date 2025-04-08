@@ -1,0 +1,46 @@
+import os
+from datetime import datetime
+
+def exibir_menu():
+    print("\nMenu:")
+    print("1. Escrever no diário")
+    print("2. Ler entradas do diário")
+    print("3. Sair")
+
+def escrever_no_diario():
+    texto = input("Digite sua anotação: ")
+    data_hora = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+    with open("diario.txt", "a") as arquivo:
+        arquivo.write(f"[{data_hora}] {texto}\n")
+    print("Anotação salva com sucesso!")
+
+def ler_diario():
+    if os.path.exists("diario.txt"):
+        with open("diario.txt", "r") as arquivo:
+            entradas = arquivo.readlines()
+            if entradas:
+                print("\nEntradas do diário:")
+                for entrada in entradas:
+                    print(entrada.strip())
+            else:
+                print("O diário está vazio.")
+    else:
+        print("O diário ainda não foi criado.")
+
+def main():
+    while True:
+        exibir_menu()
+        escolha = input("Escolha uma opção (1, 2 ou 3): ")
+        
+        if escolha == "1":
+            escrever_no_diario()
+        elif escolha == "2":
+            ler_diario()
+        elif escolha == "3":
+            print("Saindo do programa. Até logo!")
+            break
+        else:
+            print("Opção inválida. Tente novamente.")
+
+if __name__ == "__main__":
+    main()
