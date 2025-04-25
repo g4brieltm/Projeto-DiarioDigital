@@ -49,7 +49,7 @@ class DiarioDigital:
             entrada = f"{data_hora}: {texto}"
             self.entradas.append(entrada)
             self.texto_entry.delete("1.0", tk.END)
-            self.salvar_anotacoes()  # Salva as anotações após adicionar
+            self.salvar_anotacoes()  
             messagebox.showinfo("Sucesso", "Anotação adicionada com sucesso!")
         else:
             messagebox.showwarning("Atenção", "Por favor, escreva algo antes de adicionar.")
@@ -81,5 +81,5 @@ class DiarioDigital:
 
 if __name__ == "__main__":
     root = tk.Tk()
-    diario = DiarioDigital(root)  # Instancia a classe
-    root.mainloop()  # Inicia o loop da interface
+    diario = DiarioDigital(root)
+    root.mainloop()
