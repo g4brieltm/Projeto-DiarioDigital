@@ -1,0 +1,85 @@
+import tkinter as tk
+from tkinter import messagebox, ttk
+from datetime import datetime
+import os
+
+class DiarioDigital:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Diário Digital")
+        self.root.geometry("400x400")
+        self.root.configure(bg="#f0f0f0")
+
+        # Estilo
+        style = ttk.Style()
+        style.configure("TButton", font=("Helvetica", 12), padding=10)
+        style.configure("TLabel", font=("Helvetica", 12), background="#f0f0f0")
+
+        # Título
+        self.titulo_label = ttk.Label(root, text="Diário Digital", font=("Helvetica", 16, "bold"))
+        self.titulo_label.pack(pady=10)
+
+        # Área de texto
+        self.texto_entry = tk.Text(root, height=10, width=50, wrap=tk.WORD, font=("Helvetica", 12))
+        self.texto_entry.pack(pady=10)
+
+        # Botões
+        self.botao_frame = ttk.Frame(root)
+        self.botao_frame.pack(pady=10)
+
+        self.botao_anotacoes = ttk.Button(self.botao_frame, text="Adicionar Anotação", command=self.adicionar_anotacao)
+        self.botao_anotacoes.grid(row=0, column=0, padx=5)
+
+        self.botao_hora = ttk.Button(self.botao_frame, text="Exibir Hora", command=self.exibir_hora)
+        self.botao_hora.grid(row=0, column=1, padx=5)
+
+        self.botao_dia = ttk.Button(self.botao_frame, text="Exibir Dia", command=self.exibir_dia)
+        self.botao_dia.grid(row=0, column=2, padx=5)
+
+        self.botao_exibir_anotacoes = ttk.Button(self.botao_frame, text="Mostrar Anotações", command=self.mostrar_anotacoes)
+        self.botao_exibir_anotacoes.grid(row=0, column=3, padx=5)
+
+        self.entradas = []
+        self.carregar_anotacoes()  # Carrega as anotações ao iniciar
+
+    def adicionar_anotacao(self):
+        texto = self.texto_entry.get("1.0", tk.END).strip()
+        if texto:
+            data_hora = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            entrada = f"{data_hora}: {texto}"
+            self.entradas.append(entrada)
+            self.texto_entry.delete("1.0", tk.END)
+            self.salvar_anotacoes()  # Salva as anotações após adicionar
+            messagebox.showinfo("Sucesso", "Anotação adicionada com sucesso!")
+        else:
+            messagebox.showwarning("Atenção", "Por favor, escreva algo antes de adicionar.")
+
+    def exibir_hora(self):
+        hora_atual = datetime.now().strftime("%H:%M:%S")
+        messagebox.showinfo("Hora Atual", f"A hora atual é: {hora_atual}")
+
+    def exibir_dia(self):
+        dia_atual = datetime.now().strftime("%A, %d de %B de %Y")
+        messagebox.showinfo("Dia Atual", f"Hoje é: {dia_atual}")
+
+    def mostrar_anotacoes(self):
+        if self.entradas:
+            entradas_texto = "\n".join(self.entradas)
+            messagebox.showinfo("Anotações", entradas_texto)
+        else:
+            messagebox.showinfo("Anotações", "Nenhuma anotação encontrada.")
+
+    def salvar_anotacoes(self):
+        with open("anotacoes.txt", "w") as arquivo:
+            for entrada in self.entradas:
+                arquivo.write(entrada + "\n")
+
+    def carregar_anotacoes(self):
+        if os.path.exists("anotacoes.txt"):
+            with open("anotacoes.txt", "r") as arquivo:
+                self.entradas = arquivo.read().strip().split("\n")
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    diario = DiarioDigital(root)  # Instancia a classe
+    root.mainloop()  # Inicia o loop da interface
